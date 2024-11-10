@@ -27,7 +27,7 @@ function startApp() {
   app.use(cookieParser());
 
   // Health check endpoint
-  app.get("/api/health", (req, res) => {
+  app.get("/api/v1/user/api-health", (req, res) => {
     return res.status(200).json(apiResponse(200));
   });
 
