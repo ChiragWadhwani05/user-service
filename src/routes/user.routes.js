@@ -10,6 +10,7 @@ function createUserV1Router() {
   const router = Router();
 
   router.route("/getSelf").get(getSelf);
+
   return router;
 }
 
