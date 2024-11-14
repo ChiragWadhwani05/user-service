@@ -2,7 +2,9 @@ import env from "./config/env.config.js";
 import dbClient from "./db/index.js";
 import redisClient from "./utils/redisClient.js";
 import { startApp } from "./app.js";
-import { initializeKafkaConsumer } from "./consumers/kafka.consumer.js";
+import initializeKafkaTopic, {
+  initializeKafkaConsumer,
+} from "./services/kafka.service.js";
 import kafkaClient from "./utils/kafkaClient.js";
 
 /**
@@ -16,6 +18,7 @@ async function startServer() {
 
     await redisClient.connect();
 
+    await initializeKafkaTopic();
     await initializeKafkaConsumer();
 
     return startApp();

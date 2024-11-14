@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { getSelf } from "../controllers/user.controllers.js";
+import { getSelf, getUser } from "../controllers/user.controllers.js";
 
 /**
  *
@@ -10,6 +10,8 @@ function createUserV1Router() {
   const router = Router();
 
   router.route("/getSelf").get(getSelf);
+
+  router.route("/getUser").get(getUser);
 
   return router;
 }

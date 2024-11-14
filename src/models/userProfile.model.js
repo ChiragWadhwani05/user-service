@@ -8,7 +8,7 @@ const userProfileSchema = new Schema(
       required: true,
       unique: true,
       index: true,
-      ref: "AuthUser",
+      ref: "Auth_User",
     },
     username: {
       type: String,
@@ -46,6 +46,6 @@ const userProfileSchema = new Schema(
   }
 );
 
-const UserProfile = model("UserProfile", userProfileSchema);
+const UserProfile = model("User_Profile", userProfileSchema);
 
 export { UserProfile };
