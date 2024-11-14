@@ -7,4 +7,9 @@ const UserGenderEnum = Object.freeze({
 
 const AvailableUserGenders = Object.freeze(Object.values(UserGenderEnum));
 
-export { UserGenderEnum, AvailableUserGenders };
+const Kafka = Object.freeze({
+  TOPIC_NAME: "user",
+  CONSUMER_GROUP_ID: "user-group",
+});
+
+export { UserGenderEnum, AvailableUserGenders, Kafka };

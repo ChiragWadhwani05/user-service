@@ -2,6 +2,8 @@ import env from "./config/env.config.js";
 import dbClient from "./db/index.js";
 import redisClient from "./utils/redisClient.js";
 import { startApp } from "./app.js";
+import { initializeKafkaConsumer } from "./consumers/kafka.consumer.js";
+import kafkaClient from "./utils/kafkaClient.js";
 
 /**
  * @description Start the server.
@@ -13,6 +15,8 @@ async function startServer() {
     await dbClient.connect();
 
     await redisClient.connect();
+
+    await initializeKafkaConsumer();
 
     return startApp();
   } catch (error) {
@@ -35,7 +39,11 @@ function shutdown() {
     console.log(`\nReceived ${signal}, closing HTTP server...`);
 
     try {
-      await Promise.all([dbClient.disconnect(), redisClient.disconnect()]);
+      await Promise.all([
+        dbClient.disconnect(),
+        redisClient.disconnect(),
+        kafkaClient.disconnectAll(),
+      ]);
 
       console.log("\nAll services disconnected.");
     } catch (error) {
