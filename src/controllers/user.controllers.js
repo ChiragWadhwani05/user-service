@@ -1,37 +1,42 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { UserProfile } from "../models/userProfile.model.js";
+import { ApiError } from "../utils/apiError.js";
 
 const getSelf = asyncHandler(async (req, res) => {
   const userId = req.headers["user-id"];
   if (!userId) {
-    return res.status(401).json(apiResponse(401, null, "Unauthorized"));
+    throw new ApiError(400, "User id is required.");
   }
 
   const user = await UserProfile.findOne({ authUserId: userId });
 
   if (!user) {
-    return res.status(404).json(apiResponse(404, null, "User not found."));
+    throw new ApiError(404, "User not found.");
   }
 
-  return res.status(200).json(apiResponse(200, user, "Get user successfully."));
+  return res
+    .status(200)
+    .json(apiResponse(200, user, "User fetched successfully."));
 });
 
-const getUser = asyncHandler(async (req, res) => {
-  const username = req.query.username;
-  console.log(username);
+const getUserByUsername = asyncHandler(async (req, res) => {
+  const username = req.params.username;
+
   if (!username) {
-    return res.status(401).json(apiResponse(401, null, "Unauthorized"));
+    throw new ApiError(400, "Username is required.");
   }
 
   const user = await UserProfile.findOne({ username: username }).select(
-    " -__v -authUserId -createdAt -updatedAt -email"
+    " -__v -createdAt -updatedAt -email"
   );
 
   if (!user) {
-    return res.status(404).json(apiResponse(404, null, "User not found."));
+    throw new ApiError(404, "User not found.");
   }
 
-  return res.status(200).json(apiResponse(200, user, "Get user successfully."));
+  return res
+    .status(200)
+    .json(apiResponse(200, user, "User fetched successfully."));
 });
-export { getSelf, getUser };
+export { getSelf, getUserByUsername };

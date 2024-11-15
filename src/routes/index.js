@@ -12,7 +12,7 @@ function createRouter() {
 function createV1Router() {
   const router = Router();
 
-  router.use("/user", createUserV1Router());
+  router.use("/users", createUserV1Router());
 
   return router;
 }
