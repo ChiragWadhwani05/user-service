@@ -39,4 +39,19 @@ const getUserByUsername = asyncHandler(async (req, res) => {
     .status(200)
     .json(apiResponse(200, user, "User fetched successfully."));
 });
-export { getSelf, getUserByUsername };
+
+const getUsers = asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const users = await UserProfile.find({}, " -__v -createdAt -updatedAt -email")
+    .skip(skip)
+    .limit(limit);
+
+  return res
+    .status(200)
+    .json(apiResponse(200, users, "Users fetched successfully."));
+});
+
+export { getSelf, getUserByUsername, getUsers };
