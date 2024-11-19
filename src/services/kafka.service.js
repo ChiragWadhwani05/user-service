@@ -1,6 +1,10 @@
 import kafkaClient from "../utils/kafkaClient.js";
 import { Kafka } from "../constants.js";
-import { createUserProfile } from "./user.service.js";
+import {
+  createUserProfile,
+  updateEmail,
+  updateUsername,
+} from "./user.service.js";
 
 const { TOPIC_NAME, CONSUMER_GROUP_ID } = Kafka;
 
@@ -36,10 +40,25 @@ export async function initializeKafkaConsumer() {
     eachMessage: async ({ message }) => {
       try {
         const event = JSON.parse(message.value.toString());
-        console.log("UserCreated event received:", event.data);
+        const { eventType, data } = event;
 
-        // Call function to create user profile using the event data
-        await createUserProfile(event.data);
+        switch (eventType) {
+          case "createUser":
+            await createUserProfile(data);
+            break;
+
+          case "updateUsername":
+            await updateUsername(data);
+            break;
+
+          case "updateEmail":
+            await updateEmail(data);
+            break;
+
+          default:
+            console.log(`Unknown event type: ${eventType}`);
+            break;
+        }
       } catch (error) {
         console.error("Error processing UserCreated event:", error);
       }
